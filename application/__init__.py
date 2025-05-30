@@ -18,4 +18,9 @@ def create_app():
     from .routes import main
     app.register_blueprint(main)
 
+    # Crear base de datos solo si no existe
+    with app.app_context():
+        if not os.path.exists(DB_PATH):
+            db.create_all()
+
     return app

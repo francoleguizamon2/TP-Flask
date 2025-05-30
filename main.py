@@ -2,6 +2,9 @@ from application import create_app
 
 app = create_app()
 
+@app.route('/main')
+def main():
+    return 'Hello world'
 
 # with app.app_context():
 #     db.create_all()

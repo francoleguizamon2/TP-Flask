@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, render_template, request
 from . import db
 from .models import StudyAbroad
 import pandas as pd
@@ -10,39 +10,32 @@ main = Blueprint('main', __name__)
 def index():
     return "API running"
 
-@main.route('/cargar_csv', methods=['POST'])
-def cargar_csv():
-    path_csv = os.path.join(os.path.dirname(__file__), '..', 'data', 'dataset.csv')
-    df = pd.read_csv(path_csv)
+@main.route('/upload_csv', methods=['POST'])
+def upload_csv():
+    file = request.files['csv_file']
+    if not file:
+        return "No file uploaded", 400
 
-    # Normaliza los nombres de las columnas a minúsculas
-    df.columns = df.columns.str.strip().str.lower()
+    import pandas as pd
+    from .models import StudyAbroad
 
-    # print(df.columns.tolist())  # Útil para debug
+    df = pd.read_csv(file)
+    df.columns = df.columns.str.strip()
+
+    # OPCIONAL: print(df.columns.tolist()) para ver las columnas reales
 
     for _, row in df.iterrows():
         record = StudyAbroad(
-            country=row['country'],
-            city=row['city'],
-            tuition=row['tuition_usd'],
-            living_cost=row['living_cost_index'],
-            total=row['tuition_usd'] + row['living_cost_index']  # O ajusta según tu modelo
+            country=row['Country'],
+            city=row['City'],
+            tuition=row['Tuition_USD'],
+            living_cost=row['Living_Cost_Index'],
         )
         db.session.add(record)
 
     db.session.commit()
-    return jsonify({'status': 'Data loaded successfully'}), 201
+    return jsonify({'status': 'Upload and insertion successful'}), 201
 
-@main.route('/data', methods=['GET'])
-def get_data():
-    records = StudyAbroad.query.all()
-    result = [
-        {
-            'country': r.country,
-            'city': r.city,
-            'tuition': r.tuition,
-            'living_cost': r.living_cost,
-            'total': r.total
-        } for r in records
-    ]
-    return jsonify(result)
+@main.route('/upload', methods=['GET'])
+def upload_form():
+    return render_template('upload.html')
