@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="display-5 mb-4">Bienvenido al Análisis de Presupuestos para Estudiar en el Exterior</h1>
+    <p class="lead mb-4">Esta aplicación te permite subir un archivo CSV con datos de universidades y programas en el extranjero. Luego, podés visualizar análisis detallados, comparar presupuestos y ver gráficos interactivos.</p>
+    <a href="/upload" class="btn btn-primary btn-lg me-2">Subir CSV</a>
+    <a href="/dashboard" class="btn btn-outline-secondary btn-lg">Ver Dashboard</a>
+</div>
+{% endblock %}
