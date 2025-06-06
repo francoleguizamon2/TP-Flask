@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for
 from . import db
 from .models import StudyAbroad
 import pandas as pd
@@ -42,7 +42,7 @@ def upload_csv():
         db.session.add(record)
 
     db.session.commit()
-    return jsonify({'status': 'Upload and insertion successful'}), 201
+    return redirect(url_for('main.dashboard'))
 
 
 @main.route('/upload', methods=['GET'])
@@ -84,8 +84,16 @@ def dashboard():
     # Top 5 universidades más costosas
     top5_costosas = df.groupby('University')['Total_Cost'].mean().sort_values(ascending=False).head(5).reset_index()
     plt.figure(figsize=(10, 6))
-    plt.barh(top5_costosas['University'], top5_costosas['Total_Cost'], color='tomato')
-    plt.xlabel('Costo Total Promedio (USD)')
+    top5_costosas = top5_costosas.iloc[::-1]
+    plt.bar(top5_costosas['University'], top5_costosas['Total_Cost'], color='tomato', width=1, edgecolor='black')
+
+    # Set y-axis limits to zoom in on the range of your data
+    min_cost = top5_costosas['Total_Cost'].min()
+    max_cost = top5_costosas['Total_Cost'].max()
+    plt.ylim(min_cost * 0.98, max_cost * 1.01)  # Adjust the factors as needed
+
+    plt.ylabel('Costo Total Promedio (USD)')
+    plt.xlabel('Universidad')
     plt.title('Top 5 Universidades Más Costosas')
     plt.tight_layout()
     plt.savefig(os.path.join(static_dir, 'top5_costosas.png'))
@@ -142,9 +150,32 @@ def dashboard():
     plt.close()
 
     return render_template(
-        'data_table.html',
+        'dashboard.html',
         data=data,
         promedio_total=promedio_total,
         universidad_max=universidad_max,
         duracion_promedio=duracion_promedio
     )
+
+@main.route('/data_table')
+def data_table():
+    records = StudyAbroad.query.all()
+    if not records:
+        return render_template('data_table.html', data=[])
+
+    data = [{
+        'Country': r.country,
+        'City': r.city,
+        'University': r.university,
+        'Program': r.program,
+        'Level': r.level,
+        'Duration_Years': r.duration,
+        'Tuition_USD': r.tuition,
+        'Rent_USD': r.rent,
+        'Living_Cost_Index': r.living_cost,
+        'Visa_Fee_USD': r.visa_fee,
+        'Insurance_USD': r.insurance,
+        'Exchange_Rate': r.exchange_rate
+    } for r in records]
+
+    return render_template('data_table.html', data=data)

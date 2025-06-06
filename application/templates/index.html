@@ -1,12 +1,56 @@
-{% extends 'base.html' %}
-
-{% block title %}Inicio{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Inicio{% endblock %} {% block content
+%}
 <div class="text-center">
-    <h1 class="display-5 mb-4">Bienvenido al Análisis de Presupuestos para Estudiar en el Exterior</h1>
-    <p class="lead mb-4">Esta aplicación te permite subir un archivo CSV con datos de universidades y programas en el extranjero. Luego, podés visualizar análisis detallados, comparar presupuestos y ver gráficos interactivos.</p>
-    <a href="/upload" class="btn btn-primary btn-lg me-2">Subir CSV</a>
-    <a href="/dashboard" class="btn btn-outline-secondary btn-lg">Ver Dashboard</a>
+  <h1 class="display-5 mb-4">
+    Bienvenido al Análisis de Presupuestos para Estudiar en el Exterior
+  </h1>
+  <p class="lead mb-4">
+    Esta aplicación te permite subir un archivo CSV con datos de universidades y
+    programas en el extranjero. Luego, podés visualizar análisis detallados,
+    comparar presupuestos y ver gráficos interactivos.
+  </p>
+  <!-- Custom file upload button -->
+  <button
+    type="button"
+    class="btn btn-primary btn-lg me-2"
+    onclick="document.getElementById('csv_file').click();"
+  >
+    Subir CSV
+  </button>
+  <span id="file-name" class="ms-2"></span>
+  <a href="/dashboard" class="btn btn-outline-secondary btn-lg">Ver Dashboard</a>
 </div>
+<div class="text-center">
+  <form
+    action="/upload_csv"
+    method="POST"
+    enctype="multipart/form-data"
+    class="mb-3"
+    style="max-width: 400px; margin: auto"
+  >
+    <div class="mb-3">
+      <input
+        class="form-control"
+        type="file"
+        id="csv_file"
+        name="csv_file"
+        style="display: none;"
+        required
+      />
+    </div>
+    <button class="btn btn-success w-100" type="submit">Enviar</button>
+  </form>
+</div>
+<script>
+  const fileInput = document.getElementById('csv_file');
+  const fileNameSpan = document.getElementById('file-name');
+  fileInput.addEventListener('change', function () {
+    fileNameSpan.textContent = fileInput.files.length
+      ? fileInput.files[0].name
+      : '';
+  });
+</script>
+
+<a href="{{ url_for('main.data_table') }}" class="btn btn-secondary btn-lg mt-3">Ir a la Tabla de Datos</a>
+
 {% endblock %}

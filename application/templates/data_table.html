@@ -3,35 +3,8 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1 class="mb-4 text-center fw-bold">Presupuestos para Estudiar en el Exterior</h1>
 
 {% if data %}
-<div class="row mb-5">
-    <div class="col-md-4">
-        <div class="card text-white bg-primary shadow-sm">
-            <div class="card-header fw-semibold">Promedio Total</div>
-            <div class="card-body">
-                <h5 class="card-title">USD {{ promedio_total }}</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-white bg-success shadow-sm">
-            <div class="card-header fw-semibold">Máximo Costo</div>
-            <div class="card-body">
-                <h5 class="card-title">{{ universidad_max }}</h5>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card text-dark bg-warning shadow-sm">
-            <div class="card-header fw-semibold">Duración Promedio</div>
-            <div class="card-body">
-                <h5 class="card-title">{{ duracion_promedio }} años</h5>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="table-responsive">
     <table class="table table-bordered table-striped align-middle">
@@ -54,40 +27,5 @@
     </table>
 </div>
 
-<h2 class="mt-5 mb-3 text-center">Top 5 Universidades Más Costosas</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='top5_costosas.png') }}" class="img-fluid rounded shadow-sm" alt="Universidades más costosas">
-</div>
-
-<h2 class="mb-3 text-center">Top 5 Universidades Más Baratas</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='top5_baratas.png') }}" class="img-fluid rounded shadow-sm" alt="Universidades más baratas">
-</div>
-
-<h2 class="mb-3 text-center">Top 10 Países con Mayor Costo Promedio</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='paises_mas_caros.png') }}" class="img-fluid rounded shadow-sm" alt="Países más caros">
-</div>
-
-<h2 class="mb-3 text-center">Top 10 Países con Menor Costo Promedio</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='paises_mas_baratos.png') }}" class="img-fluid rounded shadow-sm" alt="Países más baratos">
-</div>
-
-<h2 class="mb-3 text-center">Top 10 Universidades con Mayor Duración</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='duracion_mas_larga.png') }}" class="img-fluid rounded shadow-sm" alt="Mayor duración">
-</div>
-
-<h2 class="mb-3 text-center">Top 10 Universidades con Menor Duración</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='duracion_mas_corta.png') }}" class="img-fluid rounded shadow-sm" alt="Menor duración">
-</div>
-
-{% else %}
-<div class="alert alert-warning text-center" role="alert">
-    No hay datos disponibles para mostrar.
-</div>
 {% endif %}
 {% endblock %}
-
