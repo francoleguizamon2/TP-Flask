@@ -84,7 +84,7 @@ def dashboard():
     static_dir = os.path.join(os.path.dirname(__file__), 'static')
     os.makedirs(static_dir, exist_ok=True)
 
-    # Top 10 países con universidades más costosas (según universidad más cara de cada país)
+   
     paises_costosas = df.groupby('Country')['Total_Cost'].max().sort_values(ascending=False).head(10)
     plt.figure(figsize=(10, 6))
     paises_costosas.plot(kind='bar', color='firebrick')
@@ -95,7 +95,7 @@ def dashboard():
     plt.savefig(os.path.join(static_dir, 'top10_paises_universidades_mas_costosas.png'))
     plt.close()
 
-    # Top 10 países con universidades más baratas (según universidad más barata)
+    
     paises_baratas = df.groupby('Country')['Total_Cost'].min().sort_values().head(10)
     plt.figure(figsize=(10, 6))
     paises_baratas.plot(kind='bar', color='forestgreen')
@@ -106,7 +106,7 @@ def dashboard():
     plt.savefig(os.path.join(static_dir, 'top10_paises_universidades_mas_baratas.png'))
     plt.close()
 
-    # Top 10 países con mayor costo promedio
+    
     pais_promedio = df.groupby('Country')['Total_Cost'].mean().sort_values(ascending=False).head(10)
     plt.figure(figsize=(10, 6))
     pais_promedio.plot(kind='bar', color='royalblue')
@@ -116,7 +116,7 @@ def dashboard():
     plt.savefig(os.path.join(static_dir, 'paises_mas_caros.png'))
     plt.close()
 
-    # Top 10 países con menor costo promedio
+    
     pais_mas_baratos = df.groupby('Country')['Total_Cost'].mean().sort_values().head(10)
     plt.figure(figsize=(10, 6))
     pais_mas_baratos.plot(kind='bar', color='mediumseagreen')
@@ -126,7 +126,7 @@ def dashboard():
     plt.savefig(os.path.join(static_dir, 'paises_mas_baratos.png'))
     plt.close()
 
-    # Top 10 países con mayor duración promedio
+    
     duracion_mayor_paises = df.groupby('Country')['Duration_Years'].mean().sort_values(ascending=False).head(10)
     plt.figure(figsize=(10, 6))
     duracion_mayor_paises.plot(kind='barh', color='slateblue')
@@ -136,7 +136,7 @@ def dashboard():
     plt.savefig(os.path.join(static_dir, 'duracion_mas_larga.png'))
     plt.close()
 
-    # Top 10 países con menor duración promedio
+    
     duracion_menor_paises = df.groupby('Country')['Duration_Years'].mean().sort_values().head(10)
     plt.figure(figsize=(10, 6))
     duracion_menor_paises.plot(kind='barh', color='lightcoral')
@@ -184,7 +184,7 @@ def recomendaciones():
     pais = request.args.get('pais', default=None)
     duracion = request.args.get('duracion', type=float)
 
-    # Recuperar todos los datos de la base
+    
     records = StudyAbroad.query.all()
     data = [{
         'University': r.university,
@@ -202,7 +202,6 @@ def recomendaciones():
     df = pd.DataFrame(data)
     df['Total_Cost'] = df[['Tuition_USD', 'Rent_USD', 'Visa_Fee_USD', 'Insurance_USD']].sum(axis=1)
 
-    # Aplicar filtros si hay
     if presupuesto:
         df = df[df['Total_Cost'] <= presupuesto]
     if duracion:
@@ -217,7 +216,7 @@ def recomendaciones():
     static_dir = os.path.join(os.path.dirname(__file__), 'static')
     os.makedirs(static_dir, exist_ok=True)
 
-    # Gráfico 1: Barras comparativas de costo total por universidad
+
     plt.figure(figsize=(10, 6))
     sns.barplot(data=df.sort_values('Total_Cost').head(10), x='Total_Cost', y='University', palette='viridis')
     plt.title('Universidades más accesibles según tus filtros')
@@ -226,7 +225,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'reco_bar_universidades.png'))
     plt.close()
 
-    # Gráfico 2: Scatter - duración vs costo total (solo resultados filtrados)
+    
     plt.figure(figsize=(8, 6))
     sns.scatterplot(data=df, x='Duration_Years', y='Total_Cost', hue='Country', palette='Set2', s=80)
     plt.title('Duración vs. Costo Total (Universidades filtradas)')
@@ -236,7 +235,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'reco_scatter_duracion_costo.png'))
     plt.close()
 
-    # Gráfico 3: Radar de componentes de costo (promedios del dataset filtrado)
+    
     componentes = ['Tuition_USD', 'Rent_USD', 'Visa_Fee_USD', 'Insurance_USD']
     costos = df[componentes].mean().tolist()
     costos += costos[:1]
@@ -253,7 +252,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'reco_radar_costos.png'))
     plt.close()
 
-    # 1. Comparación de universidades por costo total
+    
     plt.figure(figsize=(10, 6))
     top_unis = df.sort_values(by='Total_Cost').head(10)
     sns.barplot(data=top_unis, y='University', x='Total_Cost', hue='Country', dodge=False)
@@ -263,7 +262,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'comp_universidades_costo.png'))
     plt.close()
 
-    # 2. Duración por universidad
+   
     plt.figure(figsize=(10, 6))
     top_duracion = df.sort_values(by='Duration_Years').head(10)
     sns.barplot(data=top_duracion, y='University', x='Duration_Years', hue='Country', dodge=False)
@@ -273,7 +272,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'comp_universidades_duracion.png'))
     plt.close()
 
-    # 3. Costo vs Duración
+  
     plt.figure(figsize=(8, 6))
     sns.scatterplot(data=df, x='Duration_Years', y='Total_Cost', hue='University')
     plt.title('Relación entre Duración y Costo Total')
@@ -283,7 +282,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'scatter_duracion_costo.png'))
     plt.close()
 
-    # 4. Torta por nivel educativo
+ 
     if 'Level' in df.columns:
         plt.figure(figsize=(6, 6))
         df['Level'].value_counts().plot.pie(autopct='%1.1f%%', startangle=140)
@@ -293,9 +292,7 @@ def recomendaciones():
         plt.savefig(os.path.join(static_dir, 'pie_nivel_educativo.png'))
         plt.close()
 
-    # NUEVOS GRÁFICOS PERSONALIZADOS
 
-    # 5. Costo mensual estimado por universidad
     df['Monthly_Cost'] = df['Total_Cost'] / (df['Duration_Years'] * 12)
     plt.figure(figsize=(12, 8))
     sns.barplot(data=df.sort_values('Monthly_Cost'), x='Monthly_Cost', y='University', palette='coolwarm')
@@ -305,7 +302,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'reco_costo_mensual.png'))
     plt.close()
 
-    # 6. Barras apiladas de componentes del costo total
+   
     df_stacked = df.set_index('University')[['Tuition_USD', 'Rent_USD', 'Visa_Fee_USD', 'Insurance_USD']]
     df_stacked.plot(kind='barh', stacked=True, figsize=(18, 10), colormap='tab20')
     plt.title('Composición del costo total por universidad')
@@ -314,7 +311,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'reco_costos_stacked.png'))
     plt.close()
 
-    # 7. Histograma del costo total
+   
     plt.figure(figsize=(8, 5))
     sns.histplot(df['Total_Cost'], bins=10, kde=True, color='slateblue')
     plt.title('Distribución del Costo Total')
@@ -324,7 +321,7 @@ def recomendaciones():
     plt.savefig(os.path.join(static_dir, 'reco_histograma_costo.png'))
     plt.close()
 
-    # 8. Torta por programa académico (agrupando los <3% en "Otros")
+   
     if 'Program' in df.columns:
         program_counts = df['Program'].value_counts(normalize=True)
         main_programs = program_counts[program_counts >= 0.03]

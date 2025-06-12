@@ -16,7 +16,6 @@ class StudyAbroad(db.Model):
     insurance = db.Column(db.Float)
     exchange_rate = db.Column(db.Float)
 
-
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
