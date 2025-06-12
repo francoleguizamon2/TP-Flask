@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Recomendaciones{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">
+    Opciones para tu presupuesto de USD {{ presupuesto }}
+    {% if pais %} en {{ pais }}{% endif %}
+    {% if duracion %} por hasta {{ duracion }} años{% endif %}
+</h2>
+
+{% if resultados %}
+<table class="table table-bordered table-hover align-middle">
+    <thead class="table-dark text-center">
+        <tr>
+            <th>Universidad</th>
+            <th>País</th>
+            <th>Ciudad</th>
+            <th>Programa</th>
+            <th>Costo Total (USD)</th>
+            <th>Duración (años)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in resultados %}
+        <tr>
+            <td>{{ row['University'] }}</td>
+            <td>{{ row['Country'] }}</td>
+            <td>{{ row['City'] }}</td>
+            <td>{{ row['Program'] }}</td>
+            <td>{{ row['Total_Cost'] | round(2) }}</td>
+            <td>{{ row['Duration_Years'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-warning text-center">
+    No se encontraron resultados para tu presupuesto.
+</div>
+{% endif %}
+
+<hr class="my-5">
+
+<h3 class="text-center mb-4">Visualizaciones Personalizadas según tu búsqueda</h3>
+
+<div class="text-center mb-5">
+    <h4>Comparación de universidades por costo total</h4>
+    <img src="{{ url_for('static', filename='reco_bar_universidades.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Muestra las universidades más económicas según el costo total combinado de matrícula, alquiler, visa y seguro.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Relación entre duración y costo total</h4>
+    <img src="{{ url_for('static', filename='reco_scatter_duracion_costo.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Visualiza la relación entre la duración del programa y el costo total para distintas universidades seleccionadas.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Distribución promedio de los costos</h4>
+    <img src="{{ url_for('static', filename='reco_radar_costos.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Distribución promedio de cada componente de costo (matrícula, alquiler, visa, seguro) entre las opciones recomendadas.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Comparación de duración entre universidades</h4>
+    <img src="{{ url_for('static', filename='comp_universidades_duracion.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Muestra qué universidades ofrecen los programas más cortos, ideal para quienes priorizan menor duración.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Distribución por nivel educativo</h4>
+    <img src="{{ url_for('static', filename='pie_nivel_educativo.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Revela la proporción de niveles educativos (pregrado, posgrado, etc.) presentes en las opciones filtradas.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Costo mensual estimado por universidad</h4>
+    <img src="{{ url_for('static', filename='reco_costo_mensual.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Estimación del costo mensual promedio basado en la duración total de cada programa.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Composición del costo total por universidad</h4>
+    <img src="{{ url_for('static', filename='reco_costos_stacked.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Desglose visual de cuánto representa cada componente en el costo total por universidad.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Distribución del costo total</h4>
+    <img src="{{ url_for('static', filename='reco_histograma_costo.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Representa cómo se distribuyen los costos totales en todas las universidades recomendadas.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Distribución por programa académico</h4>
+    <img src="{{ url_for('static', filename='reco_torta_programas.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Presenta qué programas académicos predominan entre las universidades filtradas, agrupando los menores al 3% como “Otros”.</p>
+</div>
+
+{% endblock %}

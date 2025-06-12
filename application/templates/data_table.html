@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
-
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+<h1 class="mb-4 text-center fw-bold">Presupuestos para Estudiar en el Exterior</h1>
 
 {% if data %}
 
-<div class="table-responsive">
+<!-- Tabla de datos -->
+<div class="table-responsive" data-aos="fade-up">
     <table class="table table-bordered table-striped align-middle">
         <thead class="table-dark text-center">
             <tr>

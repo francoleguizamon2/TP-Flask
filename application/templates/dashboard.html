@@ -28,40 +28,42 @@
     </div>
 </div>
 
+<h3 class="mt-5 text-center">Análisis Global de Universidades</h3>
 
-<h2 class="mt-5 mb-3 text-center">Top 5 Universidades Más Costosas</h2>
+<h2 class="mb-3 text-center">Top 10 países con universidades más costosas</h2>
 <div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='top5_costosas.png') }}" class="img-fluid rounded shadow-sm" alt="Universidades más costosas">
+    <img src="{{ url_for('static', filename='top10_paises_universidades_mas_costosas.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Países con al menos una universidad cuyo costo total es de los más altos del conjunto de datos.</p>
 </div>
 
-<h2 class="mb-3 text-center">Top 5 Universidades Más Baratas</h2>
+<h2 class="mb-3 text-center">Top 10 países con universidades más baratas</h2>
 <div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='top5_baratas.png') }}" class="img-fluid rounded shadow-sm" alt="Universidades más baratas">
+   <img src="{{ url_for('static', filename='top10_paises_universidades_mas_baratas.png') }}" class="img-fluid rounded shadow-sm">
+   <p class="text-muted mt-2">Países con al menos una universidad cuyo costo total es de los más bajos registrados.</p>
 </div>
 
 <h2 class="mb-3 text-center">Top 10 Países con Mayor Costo Promedio</h2>
 <div class="text-center mb-5">
     <img src="{{ url_for('static', filename='paises_mas_caros.png') }}" class="img-fluid rounded shadow-sm" alt="Países más caros">
+    <p class="text-muted mt-2">Promedio general de costo total por país, considerando todas las universidades.</p>
 </div>
 
 <h2 class="mb-3 text-center">Top 10 Países con Menor Costo Promedio</h2>
 <div class="text-center mb-5">
     <img src="{{ url_for('static', filename='paises_mas_baratos.png') }}" class="img-fluid rounded shadow-sm" alt="Países más baratos">
+    <p class="text-muted mt-2">Países con menores costos promedio, ideales para estudiantes con presupuesto limitado.</p>
 </div>
 
-<h2 class="mb-3 text-center">Top 10 Universidades con Mayor Duración</h2>
+<h2 class="mb-3 text-center">Top 10 Países con Mayor Duración</h2>
 <div class="text-center mb-5">
     <img src="{{ url_for('static', filename='duracion_mas_larga.png') }}" class="img-fluid rounded shadow-sm" alt="Mayor duración">
+    <p class="text-muted mt-2">Países donde los programas universitarios tienden a tener una duración mayor.</p>
 </div>
 
-<h2 class="mb-3 text-center">Top 10 Universidades con Menor Duración</h2>
+<h2 class="mb-3 text-center">Top 10 Países con Menor Duración</h2>
 <div class="text-center mb-5">
     <img src="{{ url_for('static', filename='duracion_mas_corta.png') }}" class="img-fluid rounded shadow-sm" alt="Menor duración">
-</div>
-
-
-<div class="alert alert-warning text-center" role="alert">
-    No hay datos disponibles para mostrar.
+    <p class="text-muted mt-2">Países que ofrecen programas más breves en promedio, útiles para quienes buscan terminar antes.</p>
 </div>
 
 {% endblock %}

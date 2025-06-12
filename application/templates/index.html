@@ -1,56 +1,126 @@
-{% extends 'base.html' %} {% block title %}Inicio{% endblock %} {% block content
-%}
-<div class="text-center">
-  <h1 class="display-5 mb-4">
-    Bienvenido al Análisis de Presupuestos para Estudiar en el Exterior
-  </h1>
-  <p class="lead mb-4">
-    Esta aplicación te permite subir un archivo CSV con datos de universidades y
-    programas en el extranjero. Luego, podés visualizar análisis detallados,
-    comparar presupuestos y ver gráficos interactivos.
-  </p>
-  <!-- Custom file upload button -->
-  <button
-    type="button"
-    class="btn btn-primary btn-lg me-2"
-    onclick="document.getElementById('csv_file').click();"
-  >
-    Subir CSV
-  </button>
-  <span id="file-name" class="ms-2"></span>
-  <a href="/dashboard" class="btn btn-outline-secondary btn-lg">Ver Dashboard</a>
-</div>
-<div class="text-center">
-  <form
-    action="/upload_csv"
-    method="POST"
-    enctype="multipart/form-data"
-    class="mb-3"
-    style="max-width: 400px; margin: auto"
-  >
-    <div class="mb-3">
-      <input
-        class="form-control"
-        type="file"
-        id="csv_file"
-        name="csv_file"
-        style="display: none;"
-        required
-      />
-    </div>
-    <button class="btn btn-success w-100" type="submit">Enviar</button>
-  </form>
-</div>
-<script>
-  const fileInput = document.getElementById('csv_file');
-  const fileNameSpan = document.getElementById('file-name');
-  fileInput.addEventListener('change', function () {
-    fileNameSpan.textContent = fileInput.files.length
-      ? fileInput.files[0].name
-      : '';
-  });
-</script>
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
 
-<a href="{{ url_for('main.data_table') }}" class="btn btn-secondary btn-lg mt-3">Ir a la Tabla de Datos</a>
+{% block content %}
+<section class="text-center py-5" data-aos="fade-up">
+  <h1 class="display-4 fw-bold mb-3">¿Dónde te conviene estudiar en el exterior?</h1>
+  <p class="lead mb-4"> Explorá universidades de todo el mundo según tu presupuesto, destino preferido y duración del programa. </p>
+
+  <form method="GET" action="/recomendaciones" class="row justify-content-center g-3 mb-4">
+    <div class="col-md-3">
+      <select name="presupuesto" class="form-control">
+        <option value="" disabled selected>Elegí un presupuesto en USD (opcional)</option>
+        <option value="500">500 USD</option>
+        <option value="1000">1000 USD</option>
+        <option value="1500">1500 USD</option>
+        <option value="2000">2000 USD</option>
+        <option value="2500">2500 USD</option>
+        <option value="3000">3000 USD</option>
+        <option value="4000">4000 USD</option>
+        <option value="5000">5000 USD</option>
+        <option value="7500">7500 USD</option>
+        <option value="10000">10000 USD</option>
+        <option value="15000">15000 USD</option>
+        <option value="20000">20000 USD</option>
+        <option value="30000">30000 USD</option>
+        <option value="40000">40000 USD</option>
+        <option value="50000">50000 USD</option>
+      </select>
+    </div>
+
+<div class="col-md-3">
+  <select name="pais" class="form-control" required>
+    <option value="" disabled selected>Elegí un país</option>
+    {% if paises %}
+      {% for pais in paises %}
+        <option value="{{ pais }}">{{ pais }}</option>
+      {% endfor %}
+    {% endif %}
+  </select>
+</div>
+
+<div class="col-md-3">
+  <select name="level" class="form-control">
+    <option value="" disabled selected>Elegí un nivel educativo (opcional)</option>
+    <option value="Bachelor">Bachelor</option>
+    <option value="Master">Master</option>
+    <option value="PhD">PhD</option>
+    <option value="Diploma">Diploma</option>
+  </select>
+</div>
+
+<div class="col-md-3">
+  <select name="duracion" class="form-control">
+    <option value="" disabled selected>Elegí una duración máxima (opcional)</option>
+    <option value="1">1 año</option>
+    <option value="2">2 años</option>
+    <option value="3">3 años</option>
+    <option value="4">4 años</option>
+    <option value="5">5 años</option>
+  </select>
+</div>
+
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">Buscar opciones</button>
+    </div>
+  </form>
+
+  <a href="/dashboard" class="btn btn-outline-secondary btn-lg me-2"><i class="fas fa-chart-bar me-2"></i>Dashboard</a>
+  <a href="/upload" class="btn btn-primary btn-lg"><i class="fas fa-upload me-2"></i>Subir CSV</a>
+</section>
+
+<section class="row mt-5" data-aos="fade-up" data-aos-delay="150">
+  <h3 class="text-center mb-4">Encontrá tu mejor opción para estudiar afuera</h3>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-university me-2 text-primary"></i>Explorá Universidades</h5>
+        <p>Visualizá las instituciones más accesibles, las más costosas y sus duraciones promedio.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-globe-americas me-2 text-success"></i>Compará Países</h5>
+        <p>Revisá qué países ofrecen mejores costos promedios para estudiar en el exterior.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="fas fa-filter me-2 text-warning"></i>Personalizá tu búsqueda</h5>
+        <p>Ingresá tu presupuesto, país preferido y duración para recibir recomendaciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mt-5" data-aos="fade-up" data-aos-delay="250">
+  <div class="container">
+    <h3 class="text-center mb-4">¿Por qué usar esta herramienta?</h3>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="border rounded shadow-sm p-4 h-100">
+          <h5 class="fw-semibold"><i class="fas fa-coins text-warning me-2"></i>Análisis de costo real</h5>
+          <p>Sumamos matrícula, alquiler, seguro y visa para darte una estimación completa del costo total de estudiar en cada destino.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="border rounded shadow-sm p-4 h-100">
+          <h5 class="fw-semibold"><i class="fas fa-chart-line text-primary me-2"></i>Visualizaciones personalizadas</h5>
+          <p>Gráficos comparativos que te permiten evaluar opciones según tu presupuesto, país deseado y duración académica.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="border rounded shadow-sm p-4 h-100">
+          <h5 class="fw-semibold"><i class="fas fa-bullseye text-success me-2"></i>Recomendaciones precisas</h5>
+          <p>Ingresá tus criterios y recibí una lista de universidades que se ajustan a tus necesidades, ordenadas por conveniencia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% endblock %}
