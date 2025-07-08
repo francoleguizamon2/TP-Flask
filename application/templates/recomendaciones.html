@@ -2,11 +2,6 @@
 {% block title %}Recomendaciones{% endblock %}
 
 {% block content %}
-<h2 class="text-center mb-4">
-    Opciones para tu presupuesto de USD {{ presupuesto }}
-    {% if pais %} en {{ pais }}{% endif %}
-    {% if duracion %} por hasta {{ duracion }} años{% endif %}
-</h2>
 
 {% if resultados %}
 <table class="table table-bordered table-hover align-middle">
@@ -41,7 +36,7 @@
 
 <hr class="my-5">
 
-<h3 class="text-center mb-4">Visualizaciones Personalizadas según tu búsqueda</h3>
+<h3 class="text-center mb-4">Visualizaciones según tus filtros</h3>
 
 <div class="text-center mb-5">
     <h4>Comparación de universidades por costo total</h4>
@@ -59,18 +54,6 @@
     <h4>Distribución promedio de los costos</h4>
     <img src="{{ url_for('static', filename='reco_radar_costos.png') }}" class="img-fluid rounded shadow-sm">
     <p class="text-muted mt-2">Distribución promedio de cada componente de costo (matrícula, alquiler, visa, seguro) entre las opciones recomendadas.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Comparación de duración entre universidades</h4>
-    <img src="{{ url_for('static', filename='comp_universidades_duracion.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Muestra qué universidades ofrecen los programas más cortos, ideal para quienes priorizan menor duración.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Distribución por nivel educativo</h4>
-    <img src="{{ url_for('static', filename='pie_nivel_educativo.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Revela la proporción de niveles educativos (pregrado, posgrado, etc.) presentes en las opciones filtradas.</p>
 </div>
 
 <div class="text-center mb-5">
@@ -95,6 +78,18 @@
     <h4>Distribución por programa académico</h4>
     <img src="{{ url_for('static', filename='reco_torta_programas.png') }}" class="img-fluid rounded shadow-sm">
     <p class="text-muted mt-2">Presenta qué programas académicos predominan entre las universidades filtradas, agrupando los menores al 3% como “Otros”.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Top 10 programas más económicos</h4>
+    <img src="{{ url_for('static', filename='reco_programas_mas_economicos.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Muestra los programas académicos con menor costo promedio entre las opciones filtradas.</p>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Top 10 programas más largos</h4>
+    <img src="{{ url_for('static', filename='reco_programas_mas_largos.png') }}" class="img-fluid rounded shadow-sm">
+    <p class="text-muted mt-2">Visualiza los programas con mayor duración promedio entre los resultados mostrados.</p>
 </div>
 
 {% endblock %}

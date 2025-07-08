@@ -6,7 +6,7 @@
 
 {% if data %}
 
-<div class="table-responsive" data-aos="fade-up">
+<div class="table-responsive responsive-data-table" data-aos="fade-up">
     <table class="table table-bordered table-striped align-middle">
         <thead class="table-dark text-center">
             <tr>
@@ -16,13 +16,13 @@
             </tr>
         </thead>
         <tbody>
-            {% for row in data %}
-                <tr>
-                    {% for value in row.values() %}
-                        <td class="text-center">{{ value }}</td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
+           {% for row in data %}
+             <tr>
+                {% for key, value in row.items() %}
+                    <td class="text-center" data-label="{{ key }}">{{ value }}</td>
+                {% endfor %}
+             </tr>
+          {% endfor %}
         </tbody>
     </table>
 </div>

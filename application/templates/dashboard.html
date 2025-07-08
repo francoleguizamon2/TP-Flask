@@ -3,23 +3,23 @@
 {% block content %}
 <div class="row mb-5">
     <div class="col-md-4">
-        <div class="card text-white bg-primary shadow-sm">
-            <div class="card-header fw-semibold">Promedio Total</div>
+        <div class="card text-white bg-primary shadow-sm h-100">
+            <div class="card-header fw-semibold">País Más Económico</div>
             <div class="card-body">
-                <h5 class="card-title">USD {{ promedio_total }}</h5>
+                <h5 class="card-title">{{ pais_mas_economico }}<br><small class="text-white-50">USD {{ costo_min_promedio }}</small></h5>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card text-white bg-success shadow-sm">
-            <div class="card-header fw-semibold">Máximo Costo</div>
+        <div class="card text-white bg-success shadow-sm h-100">
+            <div class="card-header fw-semibold">Mayor Variedad de Programas</div>
             <div class="card-body">
-                <h5 class="card-title">{{ universidad_max }}</h5>
+                <h5 class="card-title">Alemania<br><small class="text-white-50">{{ cantidad_programas }} programas</small></h5>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card text-dark bg-warning shadow-sm">
+        <div class="card text-white bg-warning shadow-sm h-100">
             <div class="card-header fw-semibold">Duración Promedio</div>
             <div class="card-body">
                 <h5 class="card-title">{{ duracion_promedio }} años</h5>
@@ -29,18 +29,6 @@
 </div>
 
 <h3 class="mt-5 text-center">Análisis Global de Universidades</h3>
-
-<h2 class="mb-3 text-center">Top 10 países con universidades más costosas</h2>
-<div class="text-center mb-5">
-    <img src="{{ url_for('static', filename='top10_paises_universidades_mas_costosas.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Países con al menos una universidad cuyo costo total es de los más altos del conjunto de datos.</p>
-</div>
-
-<h2 class="mb-3 text-center">Top 10 países con universidades más baratas</h2>
-<div class="text-center mb-5">
-   <img src="{{ url_for('static', filename='top10_paises_universidades_mas_baratas.png') }}" class="img-fluid rounded shadow-sm">
-   <p class="text-muted mt-2">Países con al menos una universidad cuyo costo total es de los más bajos registrados.</p>
-</div>
 
 <h2 class="mb-3 text-center">Top 10 Países con Mayor Costo Promedio</h2>
 <div class="text-center mb-5">
@@ -64,6 +52,12 @@
 <div class="text-center mb-5">
     <img src="{{ url_for('static', filename='duracion_mas_corta.png') }}" class="img-fluid rounded shadow-sm" alt="Menor duración">
     <p class="text-muted mt-2">Países que ofrecen programas más breves en promedio, útiles para quienes buscan terminar antes.</p>
+</div>
+
+<h2 class="mb-3 text-center">Top 10 Países con Mayor Variedad de Programas</h2>
+<div class="text-center mb-5">
+    <img src="{{ url_for('static', filename='paises_mas_variedad_programas.png') }}" class="img-fluid rounded shadow-sm" alt="Variedad de programas">
+    <p class="text-muted mt-2">Cantidad de programas diferentes ofrecidos por universidades en cada país.</p>
 </div>
 
 {% endblock %}

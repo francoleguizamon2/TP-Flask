@@ -2,15 +2,27 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
+<div id="alerta-presupuesto" class="alert alert-warning text-center d-none" role="alert"></div>
+
 <section class="text-center py-5" data-aos="fade-up">
   <h1 class="display-4 fw-bold mb-3">¿Dónde te conviene estudiar en el exterior?</h1>
   <p class="lead mb-4"> Explorá universidades de todo el mundo según tu presupuesto, destino preferido y duración del programa. </p>
 
-  <form method="GET" action="/recomendaciones" class="row justify-content-center g-3 mb-4">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <form id="form-busqueda" method="GET" action="/recomendaciones" class="row justify-content-center g-3 mb-4">
     <div class="col-md-3">
       <select name="presupuesto" class="form-control">
         <option value="" disabled selected>Elegí un presupuesto en USD (opcional)</option>
-        <option value="500">500 USD</option>
         <option value="1000">1000 USD</option>
         <option value="1500">1500 USD</option>
         <option value="2000">2000 USD</option>
@@ -40,12 +52,13 @@
 </div>
 
 <div class="col-md-3">
-  <select name="level" class="form-control">
-    <option value="" disabled selected>Elegí un nivel educativo (opcional)</option>
-    <option value="Bachelor">Bachelor</option>
-    <option value="Master">Master</option>
-    <option value="PhD">PhD</option>
-    <option value="Diploma">Diploma</option>
+  <select name="programa" class="form-control">
+    <option value="" disabled selected>Elegí un programa (opcional)</option>
+    {% if programas %}
+      {% for prog in programas %}
+        <option value="{{ prog }}">{{ prog }}</option>
+      {% endfor %}
+    {% endif %}
   </select>
 </div>
 
@@ -122,5 +135,48 @@
     </div>
   </div>
 </section>
+
+<script>
+const minimos = {{ minimos | safe }};
+const combinaciones = {{ combinaciones | safe }};
+
+document.getElementById("form-busqueda").addEventListener("submit", function(event) {
+  const presupuesto = parseFloat(document.querySelector("select[name='presupuesto']").value);
+  const pais = document.querySelector("select[name='pais']").value;
+  const programa = document.querySelector("select[name='programa']").value;
+  const duracion = parseFloat(document.querySelector("select[name='duracion']").value);
+  const alerta = document.getElementById("alerta-presupuesto");
+  alerta.classList.add("d-none");
+  alerta.textContent = "";
+
+  if (pais && presupuesto && minimos[pais] && presupuesto < minimos[pais]) {
+    alerta.textContent = `El presupuesto ingresado (${presupuesto} USD) es demasiado bajo para ${pais}. El mínimo registrado es USD ${minimos[pais]}.`;
+    alerta.classList.remove("d-none");
+    event.preventDefault();
+    return;
+  }
+
+  if (pais && programa && combinaciones[pais]) {
+    const programas_disponibles = combinaciones[pais]["programas"];
+    if (!programas_disponibles.includes(programa)) {
+      alerta.textContent = `El programa "${programa}" no está disponible en ${pais}.`;
+      alerta.classList.remove("d-none");
+      event.preventDefault();
+      return;
+    }
+  }
+
+  if (pais && duracion && combinaciones[pais]) {
+    const duraciones_disponibles = combinaciones[pais]["duraciones"];
+    const hay_duracion = duraciones_disponibles.some(d => d <= duracion);
+    if (!hay_duracion) {
+      alerta.textContent = `No hay programas en ${pais} con una duración menor o igual a ${duracion} año(s).`;
+      alerta.classList.remove("d-none");
+      event.preventDefault();
+      return;
+    }
+  }
+});
+</script>
 
 {% endblock %}
