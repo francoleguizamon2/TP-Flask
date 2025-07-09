@@ -282,7 +282,7 @@ def recomendaciones():
 
     df = df.drop_duplicates(subset=['University', 'Program', 'City', 'Country', 'Duration_Years', 'Total_Cost'])
 
-    resultados = df.sort_values(by='Total_Cost').head(10).to_dict(orient='records')
+    resultados = df.sort_values(by='Total_Cost').to_dict(orient='records')
 
     static_dir = os.path.join(os.path.dirname(__file__), 'static')
     os.makedirs(static_dir, exist_ok=True)
