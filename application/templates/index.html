@@ -20,12 +20,12 @@
 {% endwith %}
 
   <form id="form-busqueda" method="GET" action="/recomendaciones" class="d-flex flex-column align-items-center gap-3 mb-4 mt-4">
-    <div class="row w-100 justify-content-center gap-3">
-      <div class="col-md-2">
+    <div class="form-row-dynamic d-flex flex-wrap justify-content-center gap-3 align-items-center">
+      <div class="form-field-dynamic">
         <div class="input-group">
           <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
-          <select name="presupuesto" class="form-control">
-            <option value="" disabled selected>Elegí un presupuesto en USD (opcional)</option>
+          <select name="presupuesto" class="form-control form-select-dynamic">
+            <option value="" disabled selected>Elegí un presupuesto en USD</option>
             <option value="1000">1000 USD</option>
             <option value="1500">1500 USD</option>
             <option value="2000">2000 USD</option>
@@ -40,18 +40,18 @@
             <option value="30000">30000 USD</option>
             <option value="40000">40000 USD</option>
             <option value="50000">50000 USD</option>
-            <option value="50000">60000 USD</option>
-            <option value="50000">70000 USD</option>
-            <option value="50000">80000 USD</option>
-            <option value="50000">90000 USD</option>
-            <option value="50000">100000 USD</option>
+            <option value="60000">60000 USD</option>
+            <option value="70000">70000 USD</option>
+            <option value="80000">80000 USD</option>
+            <option value="90000">90000 USD</option>
+            <option value="100000">100000 USD</option>
           </select>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="form-field-dynamic">
         <div class="input-group">
           <span class="input-group-text"><i class="fas fa-globe"></i></span>
-          <select name="pais" class="form-control">
+          <select name="pais" class="form-control form-select-dynamic">
             <option value="" disabled selected>Elegí un país</option>
             {% if paises %}
               {% for pais in paises %}
@@ -61,11 +61,11 @@
           </select>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="form-field-dynamic">
         <div class="input-group">
           <span class="input-group-text"><i class="fas fa-book"></i></span>
-          <select name="programa" class="form-control">
-            <option value="" disabled selected>Elegí un programa (opcional)</option>
+          <select name="programa" class="form-control form-select-dynamic">
+            <option value="" disabled selected>Elegí un programa</option>
             {% if programas %}
               {% for prog in programas %}
                 <option value="{{ prog }}">{{ prog }}</option>
@@ -74,11 +74,11 @@
           </select>
         </div>
       </div>
-      <div class="col-md-2">
+      <div class="form-field-dynamic">
         <div class="input-group">
           <span class="input-group-text"><i class="fas fa-clock"></i></span>
-          <select name="duracion" class="form-control">
-            <option value="" disabled selected>Elegí una duración máxima (opcional)</option>
+          <select name="duracion" class="form-control form-select-dynamic">
+            <option value="" disabled selected>Elegí una duración máxima</option>
             <option value="1">1 año</option>
             <option value="2">2 años</option>
             <option value="3">3 años</option>

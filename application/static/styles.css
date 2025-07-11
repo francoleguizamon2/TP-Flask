@@ -102,6 +102,72 @@ input.form-control {
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Estilos para formulario dinámico */
+.form-row-dynamic {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.form-field-dynamic {
+    flex: 0 0 auto;
+    min-width: fit-content;
+}
+
+.form-select-dynamic {
+    width: auto !important;
+    min-width: 200px;
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 2.5rem !important;
+}
+
+.form-field-dynamic .input-group {
+    width: auto;
+    flex-wrap: nowrap;
+}
+
+.form-field-dynamic .input-group-text {
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Ajustar el ancho basado en el contenido seleccionado */
+.form-select-dynamic:focus {
+    width: auto !important;
+    min-width: 200px;
+}
+
+/* Responsivo para dispositivos móviles */
+@media (max-width: 768px) {
+    .form-row-dynamic {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .form-field-dynamic {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .form-select-dynamic {
+        width: 100% !important;
+        min-width: unset;
+        max-width: unset;
+    }
+}
+
+@media (max-width: 992px) and (min-width: 769px) {
+    .form-row-dynamic {
+        justify-content: center;
+    }
+    
+    .form-field-dynamic {
+        margin-bottom: 0.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .responsive-data-table table thead {
         display: none;
