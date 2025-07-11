@@ -56,6 +56,9 @@
               </tbody>
             </table>
           </div>
+          {% set tipo_cortina = 'pais' %}
+{% set valor_cortina = p %}
+{% include 'partes/canvas_block.html' %}
         </div>
       </div>
 
@@ -115,6 +118,9 @@
               </tbody>
             </table>
           </div>
+          {% set tipo_cortina = 'programa' %}
+{% set valor_cortina = prog %}
+{% include 'partes/canvas_block.html' %}
         </div>
       </div>
 
@@ -128,58 +134,6 @@
 </div>
 {% endif %}
 
-<hr class="my-5">
-
-<h3 class="text-center mb-4">Visualizaciones según tus filtros</h3>
-
-<div class="text-center mb-5">
-    <h4>Comparación de universidades por costo total</h4>
-    <img src="{{ url_for('static', filename='reco_bar_universidades.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Muestra las universidades más económicas según el costo total combinado de matrícula, alquiler, visa y seguro.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Distribución promedio de los costos</h4>
-    <img src="{{ url_for('static', filename='reco_radar_costos.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Distribución promedio de cada componente de costo (matrícula, alquiler, visa, seguro) entre las opciones recomendadas.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Costo mensual estimado por universidad</h4>
-    <img src="{{ url_for('static', filename='reco_costo_mensual.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Estimación del costo mensual promedio basado en la duración total de cada programa.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Composición del costo total por universidad</h4>
-    <img src="{{ url_for('static', filename='reco_costos_stacked.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Desglose visual de cuánto representa cada componente en el costo total por universidad.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Distribución del costo total</h4>
-    <img src="{{ url_for('static', filename='reco_histograma_costo.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Representa cómo se distribuyen los costos totales en todas las universidades recomendadas.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Distribución por programa académico</h4>
-    <img src="{{ url_for('static', filename='reco_torta_programas.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Presenta qué programas académicos predominan entre las universidades filtradas, agrupando los menores al 3% como “Otros”.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Top 10 programas más económicos</h4>
-    <img src="{{ url_for('static', filename='reco_programas_mas_economicos.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Muestra los programas académicos con menor costo promedio entre las opciones filtradas.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Top 10 programas más largos</h4>
-    <img src="{{ url_for('static', filename='reco_programas_mas_largos.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Visualiza los programas con mayor duración promedio entre los resultados mostrados.</p>
-</div>
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.btn-toggle').forEach(btn => {
@@ -189,19 +143,120 @@ document.addEventListener('DOMContentLoaded', () => {
       const target   = document.querySelector(targetId);
       const wrapper  = btn.closest('.grid-item');
 
-      /* Al MOSTRAR la tabla */
       target.addEventListener('shown.bs.collapse', () => {
         wrapper.classList.remove('col-6','col-md-4','col-lg-3');
         wrapper.classList.add   ('col-12','px-0');
       }, { once:true });
 
-      /* Al OCULTAR la tabla */
       target.addEventListener('hidden.bs.collapse', () => {
         wrapper.classList.remove('col-12','px-0');
         wrapper.classList.add   ('col-6','col-md-4','col-lg-3');
       }, { once:true });
     });
 
+  });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const cache = {};
+
+  const barY = (ctx, labels, values) => new Chart(ctx,{
+    type:'bar',
+    data:{labels,datasets:[{data:values}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false}}}});
+
+  const drop = canvas => canvas.parentElement.remove();
+
+  const dedupTop = (arr,labelKey,valueKey,top=10,asc=true) =>{
+    const seen=new Set(),out=[];
+    for(const r of (asc?arr:arr.slice().reverse())){
+      if(seen.has(r[labelKey])) continue;
+      seen.add(r[labelKey]);
+      out.push(r);
+      if(out.length===top) break;
+    }
+    return out;
+  };
+
+  function render(canvas, data){
+    const ctx = canvas.getContext('2d');
+    switch(canvas.dataset.chart){
+
+      case 'top_univ': {
+        const clean = dedupTop(data.top_univ,'University','Total');
+        if(clean.length<2) return drop(canvas);
+        return barY(ctx, clean.map(d=>d.University), clean.map(d=>d.Total));
+      }
+
+      case 'dist_comp':
+        return new Chart(ctx,{type:'pie',
+          data:{labels:Object.keys(data.dist_comp),
+                datasets:[{data:Object.values(data.dist_comp)}]}});
+
+      case 'mensual': {
+        const clean = dedupTop(data.mensual,'University','Monthly');
+        if(clean.length<2) return drop(canvas);
+        return barY(ctx, clean.map(d=>d.University), clean.map(d=>d.Monthly));
+      }
+
+      case 'stacked':
+        if(canvas.dataset.tipo==='programa') return drop(canvas);
+        const comp=['Tuition','Rent','Visa','Insurance'];
+        const labs=data.stacked.map(r=>r.University);
+        const sets=comp.map(c=>({label:c,data:data.stacked.map(r=>r[c]),stack:'x'}));
+        return new Chart(ctx,{type:'bar',
+          data:{labels:labs,datasets:sets},
+          options:{indexAxis:'y',
+                   plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},
+                   scales:{y:{ticks:{callback:v=>v.length>20?v.slice(0,20)+'…':v}}}}});
+
+      case 'top_eco_prog': {
+        if(!data.top_eco_prog.length) return drop(canvas);
+        const clean = dedupTop(data.top_eco_prog,'Program','Total');
+        if(clean.length<2) return drop(canvas);
+        return barY(ctx, clean.map(d=>d.Program), clean.map(d=>d.Total));
+      }
+
+      case 'top_largos_prog': {
+        if(!data.top_largos_prog.length) return drop(canvas);
+        const clean = dedupTop(data.top_largos_prog,'Program','Duration');
+        if(clean.length<2) return drop(canvas);
+        return barY(ctx, clean.map(d=>d.Program), clean.map(d=>d.Duration));
+      }
+
+      case 'top_eco_pais': {
+        if(!data.top_eco_pais.length) return drop(canvas);
+        const clean = dedupTop(data.top_eco_pais,'Country','Total');
+        if(clean.length<2) return drop(canvas);
+        return barY(ctx, clean.map(d=>d.Country), clean.map(d=>d.Total));
+      }
+
+      case 'duracion_corta_pais': {
+        if(!data.duracion_corta_pais.length) return drop(canvas);
+        const clean = dedupTop(data.duracion_corta_pais,'Country','Duration');
+        if(clean.length<2) return drop(canvas);
+        return barY(ctx, clean.map(d=>d.Country), clean.map(d=>d.Duration));
+      }
+    }
+  }
+
+  document.querySelectorAll('.collapse').forEach(col=>{
+    col.addEventListener('shown.bs.collapse', () => {
+      const first = col.parentElement.querySelector('canvas.grafico');
+      if(!first) return;
+      const key = `${first.dataset.tipo}-${first.dataset.valor}`;
+      if(cache[key]) return;
+
+      fetch(`/api/graficos?tipo=${first.dataset.tipo}&valor=${encodeURIComponent(first.dataset.valor)}`)
+        .then(r=>r.json()).then(data=>{
+          if(data.error) return console.warn(data.error);
+          col.querySelectorAll('canvas.grafico').forEach(c=>render(c,data));
+          cache[key]=true;
+        })
+        .catch(console.error);
+    });
   });
 });
 </script>

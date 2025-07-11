@@ -425,3 +425,50 @@ def recomendaciones():
                            presupuesto=presupuesto,
                            pais=pais,
                            duracion=duracion)
+
+@main.route('/api/graficos')
+def api_graficos():
+    tipo  = request.args.get('tipo')      
+    valor = request.args.get('valor')
+    if tipo not in ('pais','programa') or not valor:
+        return jsonify({'error':'Parámetros inválidos'}),400
+
+    records = StudyAbroad.query.all()
+    df = pd.DataFrame([{
+        'University': r.university,
+        'Country':    r.country,
+        'Program':    r.program,
+        'Duration':   r.duration,
+        'Tuition':    r.tuition,
+        'Rent':       r.rent,
+        'Visa':       r.visa_fee,
+        'Insurance':  r.insurance
+    } for r in records])
+    df['Total']   = df[['Tuition','Rent','Visa','Insurance']].sum(axis=1)
+    df['Monthly'] = df['Total']/(df['Duration']*12)
+
+    df = df[df['Country']==valor] if tipo=='pais' else df[df['Program']==valor]
+    if df.empty:
+        return jsonify({'error':'Sin datos'}),404
+
+    def top_unique(key,value,top=10,asc=True):
+        s = (df.groupby(key)[value].mean()
+               .sort_values(ascending=asc)
+               .reset_index())
+        return (s.drop_duplicates(subset=key)
+                 .head(top).to_dict(orient='records'))
+
+    payload = {
+        'top_univ' : top_unique('University','Total',10,True),
+        'dist_comp': df[['Tuition','Rent','Visa','Insurance']].mean().to_dict(),
+        'mensual'  : top_unique('University','Monthly',10,True),
+        'stacked'  : df[['University','Tuition','Rent','Visa','Insurance']]
+                      .to_dict(orient='records'),
+
+        'top_eco_prog'   : [] if tipo=='programa' else top_unique('Program','Total',10,True),
+        'top_largos_prog': [] if tipo=='programa' else top_unique('Program','Duration',10,False),
+
+        'top_eco_pais'      : [] if tipo=='pais' else top_unique('Country','Total',10,True),
+        'duracion_corta_pais': [] if tipo=='pais' else top_unique('Country','Duration',10,True)
+    }
+    return jsonify(payload),200
