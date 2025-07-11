@@ -4,30 +4,124 @@
 {% block content %}
 
 {% if resultados %}
-<table class="table table-bordered table-hover align-middle">
-    <thead class="table-dark text-center">
-        <tr>
-            <th>Universidad</th>
-            <th>País</th>
-            <th>Ciudad</th>
-            <th>Programa</th>
-            <th>Costo Total (USD)</th>
-            <th>Duración (años)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in resultados %}
-        <tr>
-            <td>{{ row['University'] }}</td>
-            <td>{{ row['Country'] }}</td>
-            <td>{{ row['City'] }}</td>
-            <td>{{ row['Program'] }}</td>
-            <td>{{ row['Total_Cost'] | round(2) }}</td>
-            <td>{{ row['Duration_Years'] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h4 class="fw-bold mb-3">
+  Resultados agrupados por <span class="text-primary">País</span>
+</h4>
+
+<div class="row g-3 mb-5">
+  {% set paises_filtrados = resultados | map(attribute='Country') | unique | list %}
+  {% for p in paises_filtrados %}
+  <div class="grid-item col-6 col-md-4 col-lg-3">
+
+      <button class="btn btn-outline-primary w-100 text-truncate btn-toggle"
+              data-bs-toggle="collapse"
+              data-bs-target="#tabla-pais-{{ loop.index }}"
+              aria-expanded="false"
+              aria-controls="tabla-pais-{{ loop.index }}">
+        {{ p }}
+      </button>
+
+      <div class="collapse w-100 mt-3" id="tabla-pais-{{ loop.index }}">
+        <div class="card card-body shadow-sm">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-semibold">{{ p }}</span>
+            <button class="btn btn-sm btn-light"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#tabla-pais-{{ loop.index }}">
+              ▲
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0">
+              <thead class="table-dark text-center">
+                <tr>
+                  <th>Universidad</th>
+                  <th>Ciudad</th>
+                  <th>Programa</th>
+                  <th>Costo USD</th>
+                  <th>Duración</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in resultados if row.Country == p %}
+                <tr>
+                  <td>{{ row.University }}</td>
+                  <td>{{ row.City }}</td>
+                  <td>{{ row.Program }}</td>
+                  <td>{{ row.Total_Cost | round(2) }}</td>
+                  <td>{{ row.Duration_Years }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  {% endfor %}
+</div>
+
+<h4 class="fw-bold mb-3">
+  Resultados agrupados por <span class="text-success">Programa</span>
+</h4>
+
+<div class="row g-3">
+  {% set programas_filtrados = resultados | map(attribute='Program') | unique | list %}
+  {% for prog in programas_filtrados %}
+  <div class="grid-item col-6 col-md-4 col-lg-3">
+
+      <button class="btn btn-outline-success w-100 text-truncate btn-toggle"
+              data-bs-toggle="collapse"
+              data-bs-target="#tabla-prog-{{ loop.index }}"
+              aria-expanded="false"
+              aria-controls="tabla-prog-{{ loop.index }}">
+        {{ prog }}
+      </button>
+
+      <div class="collapse w-100 mt-3" id="tabla-prog-{{ loop.index }}">
+        <div class="card card-body shadow-sm">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-semibold">{{ prog }}</span>
+            <button class="btn btn-sm btn-light"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#tabla-prog-{{ loop.index }}">
+              ▲
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0">
+              <thead class="table-dark text-center">
+                <tr>
+                  <th>Universidad</th>
+                  <th>País</th>
+                  <th>Ciudad</th>
+                  <th>Costo USD</th>
+                  <th>Duración</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in resultados if row.Program == prog %}
+                <tr>
+                  <td>{{ row.University }}</td>
+                  <td>{{ row.Country }}</td>
+                  <td>{{ row.City }}</td>
+                  <td>{{ row.Total_Cost | round(2) }}</td>
+                  <td>{{ row.Duration_Years }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  {% endfor %}
+</div>
+
 {% else %}
 <div class="alert alert-warning text-center">
     No se encontraron resultados para tu presupuesto.
@@ -42,12 +136,6 @@
     <h4>Comparación de universidades por costo total</h4>
     <img src="{{ url_for('static', filename='reco_bar_universidades.png') }}" class="img-fluid rounded shadow-sm">
     <p class="text-muted mt-2">Muestra las universidades más económicas según el costo total combinado de matrícula, alquiler, visa y seguro.</p>
-</div>
-
-<div class="text-center mb-5">
-    <h4>Relación entre duración y costo total</h4>
-    <img src="{{ url_for('static', filename='reco_scatter_duracion_costo.png') }}" class="img-fluid rounded shadow-sm">
-    <p class="text-muted mt-2">Visualiza la relación entre la duración del programa y el costo total para distintas universidades seleccionadas.</p>
 </div>
 
 <div class="text-center mb-5">
@@ -91,5 +179,31 @@
     <img src="{{ url_for('static', filename='reco_programas_mas_largos.png') }}" class="img-fluid rounded shadow-sm">
     <p class="text-muted mt-2">Visualiza los programas con mayor duración promedio entre los resultados mostrados.</p>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.btn-toggle').forEach(btn => {
+
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.bsTarget;
+      const target   = document.querySelector(targetId);
+      const wrapper  = btn.closest('.grid-item');
+
+      /* Al MOSTRAR la tabla */
+      target.addEventListener('shown.bs.collapse', () => {
+        wrapper.classList.remove('col-6','col-md-4','col-lg-3');
+        wrapper.classList.add   ('col-12','px-0');
+      }, { once:true });
+
+      /* Al OCULTAR la tabla */
+      target.addEventListener('hidden.bs.collapse', () => {
+        wrapper.classList.remove('col-12','px-0');
+        wrapper.classList.add   ('col-6','col-md-4','col-lg-3');
+      }, { once:true });
+    });
+
+  });
+});
+</script>
 
 {% endblock %}

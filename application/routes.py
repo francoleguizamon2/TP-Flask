@@ -194,6 +194,36 @@ def dashboard():
     pais_mayor_variedad = programas_por_pais.idxmax()
     cantidad_programas = programas_por_pais.max()
 
+    top_prog_caro = df.groupby('Program')['Total_Cost'].mean().sort_values(ascending=False).head(10)
+    plt.figure(figsize=(10, 6))
+    top_prog_caro.plot(kind='bar', color='crimson')
+    plt.ylabel('Costo Promedio (USD)')
+    plt.title('Top 10 Programas más Caros (promedio)')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig(os.path.join(static_dir, 'prog_mas_caros.png'))
+    plt.close()
+
+    top_prog_barato = df.groupby('Program')['Total_Cost'].mean().sort_values().head(10)
+    plt.figure(figsize=(10, 6))
+    top_prog_barato.plot(kind='bar', color='seagreen')
+    plt.ylabel('Costo Promedio (USD)')
+    plt.title('Top 10 Programas más Baratos (promedio)')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig(os.path.join(static_dir, 'prog_mas_baratos.png'))
+    plt.close()
+
+    prog_populares = df['Program'].value_counts().head(10)
+    plt.figure(figsize=(10, 6))
+    prog_populares.plot(kind='bar', color='darkcyan')
+    plt.ylabel('Número de Ofertas')
+    plt.title('Top 10 Programas más Populares')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig(os.path.join(static_dir, 'prog_mas_populares.png'))
+    plt.close()
+
     return render_template(
         'dashboard.html',
         data=data,
@@ -388,6 +418,7 @@ def recomendaciones():
         plt.tight_layout()
         plt.savefig(os.path.join(static_dir, 'reco_programas_mas_largos.png'))
         plt.close()
+
 
     return render_template('recomendaciones.html',
                            resultados=resultados,

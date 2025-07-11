@@ -168,38 +168,57 @@ input.form-control {
     }
 }
 
-@media (max-width: 768px) {
-    .responsive-data-table table thead {
-        display: none;
-    }
-
-    .responsive-data-table table tbody td {
-        display: block;
-        width: 100%;
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-        border: none;
-        border-bottom: 1px solid #dee2e6;
-    }
-
-    .responsive-data-table table tbody td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 1rem;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
-        font-weight: bold;
-        color: #6c757d;
-    }
-
-    .responsive-data-table table tr {
-        margin-bottom: 1rem;
-        display: block;
-        border: 1px solid #dee2e6;
-        border-radius: 0.5rem;
-        box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
-    }
+@media (max-width: 1199.98px) {
+  .responsive-data-table {
+    overflow-x: auto;
+  }
 }
+
+@media (max-width: 991.98px) {
+  .responsive-data-table table thead {
+    display: none;
+  }
+
+  .responsive-data-table table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.05);
+  }
+
+  .responsive-data-table table tbody td {
+    display: block;
+    width: 100%;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 0.95rem;
+  }
+
+  .responsive-data-table table tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    font-weight: bold;
+    color: #6c757d;
+    text-align: left;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .responsive-data-table table tbody td {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem 0.5rem 50%;
+  }
+
+  .responsive-data-table table tbody td::before {
+    font-size: 0.9rem;
+  }
+}
+

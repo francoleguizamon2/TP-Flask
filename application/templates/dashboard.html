@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<h3 class="mt-5 text-center">Análisis Global de Universidades</h3>
+<h3 class="mt-5 text-center">Análisis Global de Universidades </h3>
 
 <h2 class="mb-3 text-center">Top 10 Países con Mayor Costo Promedio</h2>
 <div class="text-center mb-5">
@@ -58,6 +58,24 @@
 <div class="text-center mb-5">
     <img src="{{ url_for('static', filename='paises_mas_variedad_programas.png') }}" class="img-fluid rounded shadow-sm" alt="Variedad de programas">
     <p class="text-muted mt-2">Cantidad de programas diferentes ofrecidos por universidades en cada país.</p>
+</div>
+
+<h2 class="mb-3 text-center">Top 10 Programas más Caros (promedio)</h2>
+<div class="text-center mb-5">
+  <img src="{{ url_for('static', filename='prog_mas_caros.png') }}" class="img-fluid rounded shadow-sm" alt="Programas caros">
+  <p class="text-muted mt-2">Promedio de programas más caros, considerando todas las universidades</p>
+</div>
+
+<h2 class="mb-3 text-center">Top 10 Programas más Baratos (promedio)</h2>
+<div class="text-center mb-5">
+  <img src="{{ url_for('static', filename='prog_mas_baratos.png') }}" class="img-fluid rounded shadow-sm" alt="Programas baratos">
+   <p class="text-muted mt-2">Promedio de programas más baratos, ideales para estudiantes con presupuesto limitado.</p>
+</div>
+
+<h2 class="mb-3 text-center">Top 10 Programas más Populares</h2>
+<div class="text-center mb-5">
+  <img src="{{ url_for('static', filename='prog_mas_populares.png') }}" class="img-fluid rounded shadow-sm" alt="Programas populares">
+    <p class="text-muted mt-2">Programas más populares, considerando sus tendencias en todas las universidades</p>
 </div>
 
 {% endblock %}
