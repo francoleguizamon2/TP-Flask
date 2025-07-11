@@ -34,7 +34,8 @@ h1, h2, h5 {
 .card {
     border: none;
     border-radius: 0.75rem;
-    box-shadow: 0 0.25rem 0.6rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 1.5px 6px rgba(0,0,0,0.08);
+    background: #fff;
 }
 
 .card-header {
@@ -61,12 +62,6 @@ h1, h2, h5 {
     font-size: 0.95rem;
 }
 
-form input[type="file"] {
-    border: 1px solid #ced4da;
-    padding: 10px;
-    border-radius: 0.25rem;
-}
-
 footer {
     background-color: #212529;
     color: #ccc;
@@ -87,8 +82,24 @@ input.form-control {
     font-size: 1rem;
 }
 
-.card.text-white h5 {
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+.fw-bold {
+    font-weight: 700 !important;
+}
+
+.fw-semibold {
+    font-weight: 600 !important;
+}
+
+/* Clase específica para tarjetas con sombreado más prominente */
+.card-shadow {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0 10px; /* Espaciado horizontal entre tarjetas */
+}
+
+.card-shadow:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15) !important;
 }
 
 @media (max-width: 768px) {
